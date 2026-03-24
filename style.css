@@ -23,3 +23,21 @@ canvas {
     flex-direction: column;
     align-items: flex-start;
 }
+
+.controls {
+    margin-top: 20px;
+    text-align: left;
+}
+
+.controls h2 {
+    margin-bottom: 10px;
+}
+
+.controls ul {
+    list-style: none;
+    padding: 0;
+}
+
+.controls li {
+    margin-bottom: 5px;
+}
