@@ -6,20 +6,20 @@ body {
     font-size: 2em;
     text-align: center;
     display: flex;
-    justify-content: center;
+    justify-content: center; /* This will center the content horizontally */
     align-items: center;
     height: 100vh;
     margin: 0;
-    padding-left: 20px;
+    /* padding-left: 20px; */ /* Removed fixed padding */
 }
 
 .game-container {
     display: flex;
     align-items: flex-start;
     gap: 20px;
-    padding: 20px; /* Restored padding to create the area */
+    padding: 20px;
     border-radius: 10px;
-    background: #000; /* This background with padding creates the visual area */
+    background: #000;
 }
 
 canvas#tetris {
