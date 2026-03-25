@@ -6,11 +6,12 @@ body {
     font-size: 2em;
     text-align: center;
     display: flex;
-    justify-content: center; /* This will center the content horizontally */
+    justify-content: center; /* Center horizontally */
     align-items: center;
     height: 100vh;
     margin: 0;
-    /* padding-left: 20px; */ /* Removed fixed padding */
+    padding: 10px; /* Add global padding for breathing room */
+    box-sizing: border-box; /* Ensures padding is included in total width/height */
 }
 
 .game-container {
