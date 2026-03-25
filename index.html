@@ -1,27 +1,32 @@
+
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tetris</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <h1>Tetris</h1>
-    <div class="container">
+    <div class="game-container">
         <canvas id="tetris" width="240" height="400"></canvas>
-        <div class="info">
-            <p>Score: <span id="score">0</span></p>
-            <p>Next:</p>
-            <canvas id="next" width="80" height="80"></canvas>
+        <div class="side-panel">
+            <div>
+                <h2>SCORE</h2>
+                <div id="score">0</div>
+            </div>
+            <div>
+                <h2>NEXT</h2>
+                <canvas id="next" width="80" height="80"></canvas>
+            </div>
+            <div class="controls">
+                <button id="btn-left">←</button>
+                <button id="btn-right">→</button>
+                <button id="btn-down">↓</button>
+                <button id="btn-rotate">↻</button>
+            </div>
         </div>
     </div>
     <script src="script.js"></script>
-    <div class="controls">
-        <h2>Controls</h2>
-        <ul>
-            <li><strong>Left/Right Arrow:</strong> Move</li>
-            <li><strong>Down Arrow:</strong> Speed Up</li>
-            <li><strong>Q / W:</strong> Rotate</li>
-        </ul>
-    </div>
 </body>
 </html>
