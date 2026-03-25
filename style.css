@@ -1,4 +1,11 @@
 
+html, body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    width: 100%;
+}
+
 body {
     background: #202028;
     color: #fff;
@@ -6,12 +13,9 @@ body {
     font-size: 2em;
     text-align: center;
     display: flex;
-    justify-content: center; /* Center horizontally */
-    align-items: center;
-    height: 100vh;
-    margin: 0;
-    padding: 10px; /* Add global padding for breathing room */
-    box-sizing: border-box; /* Ensures padding is included in total width/height */
+    justify-content: center; /* Center horizontally in the full-width body */
+    align-items: center;     /* Center vertically */
+    box-sizing: border-box;
 }
 
 .game-container {
@@ -21,6 +25,7 @@ body {
     padding: 20px;
     border-radius: 10px;
     background: #000;
+    /* max-width: 95%; */ /* Ensure it doesn't touch edges on very small screens */
 }
 
 canvas#tetris {
