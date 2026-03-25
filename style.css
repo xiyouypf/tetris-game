@@ -4,32 +4,36 @@ html, body {
     padding: 0;
     height: 100%;
     width: 100%;
+    overflow: hidden; /* Prevent scrollbars from appearing */
 }
 
 body {
     background: #202028;
     color: #fff;
     font-family: sans-serif;
-    font-size: 2em;
-    text-align: center;
     display: flex;
-    justify-content: center; /* Center horizontally in the full-width body */
-    align-items: center;     /* Center vertically */
+    justify-content: center;
+    align-items: center;
     box-sizing: border-box;
+    padding: 10px;
 }
 
 .game-container {
     display: flex;
+    justify-content: center; /* Center items horizontally */
     align-items: flex-start;
+    flex-wrap: wrap; /* Allow items to wrap to the next line on small screens */
     gap: 20px;
     padding: 20px;
     border-radius: 10px;
     background: #000;
-    /* max-width: 95%; */ /* Ensure it doesn't touch edges on very small screens */
+    max-width: 100%; /* Ensure the container itself doesn't overflow */
 }
 
 canvas#tetris {
     border: solid 1px #fff;
+    max-width: 100%; /* Make canvas responsive */
+    height: auto;    /* Maintain aspect ratio */
 }
 
 .side-panel {
@@ -37,7 +41,8 @@ canvas#tetris {
     flex-direction: column;
     align-items: center;
     gap: 20px;
-    padding: 10px;
+    min-width: 120px; /* Give side panel a minimum width */
+    flex-grow: 1;     /* Allow it to grow */
 }
 
 .side-panel h2 {
@@ -48,6 +53,7 @@ canvas#tetris {
 #score {
     color: #FF0D72;
     font-weight: bold;
+    font-size: 1.5em;
 }
 
 canvas#next {
@@ -59,6 +65,7 @@ canvas#next {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     gap: 10px;
+    width: 100%; /* Make controls take full width of side-panel */
 }
 
 .controls button {
