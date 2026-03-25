@@ -10,17 +10,16 @@ body {
     align-items: center;
     height: 100vh;
     margin: 0;
-    padding-left: 20px; /* Add some padding to the left */
+    padding-left: 20px;
 }
 
 .game-container {
     display: flex;
     align-items: flex-start;
     gap: 20px;
-    /* border: solid 2px #fff; */ /* Removed border */
-    /* padding: 20px; */ /* Removed padding */
+    padding: 20px; /* Restored padding to create the area */
     border-radius: 10px;
-    background: #000;
+    background: #000; /* This background with padding creates the visual area */
 }
 
 canvas#tetris {
@@ -32,7 +31,7 @@ canvas#tetris {
     flex-direction: column;
     align-items: center;
     gap: 20px;
-    padding: 10px; /* Add some padding to the side panel for spacing */
+    padding: 10px;
 }
 
 .side-panel h2 {
