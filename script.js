@@ -5,6 +5,13 @@ const nextCanvas = document.getElementById('next');
 const nextContext = nextCanvas.getContext('2d');
 const scoreElement = document.getElementById('score');
 
+// New Power-Up DOM Elements
+const powerUpCanvas = document.getElementById('power-up-block');
+const powerUpContext = powerUpCanvas.getContext('2d');
+const powerUpCountElement = document.getElementById('power-up-count');
+const btnAddPowerUp = document.getElementById('btn-add-power-up');
+const btnUsePowerUp = document.getElementById('btn-use-power-up');
+
 // Buttons
 const btnLeft = document.getElementById('btn-left');
 const btnRight = document.getElementById('btn-right');
@@ -13,12 +20,15 @@ const btnRotate = document.getElementById('btn-rotate');
 
 context.scale(20, 20);
 nextContext.scale(20, 20);
+powerUpContext.scale(20, 20); // Scale for the new canvas
 
 // --- State ---
 let isPaused = false;
 let dropCounter = 0;
 let dropInterval = 1000;
 let lastTime = 0;
+let powerUpCount = 0; // New state
+let isPowerUpActive = false; // New state
 
 const arena = createMatrix(12, 20);
 const player = {
@@ -26,6 +36,8 @@ const player = {
     matrix: null,
     score: 0,
 };
+
+const UNIVERSAL_BLOCK = [[8]]; // New constant for the special block
 
 // --- Shapes (3 to 7 blocks) ---
 const SHAPES = {
@@ -36,7 +48,7 @@ const SHAPES = {
     7: [[[1, 1, 1, 1, 1, 1, 1]], [[1, 1, 1], [1, 0, 1], [1, 1, 1]], [[0, 1, 0], [0, 1, 0], [1, 1, 1], [1, 0, 1]], [[1, 1, 1, 1], [0, 0, 1, 0], [0, 0, 1, 0], [0, 0, 1, 0]]],
 };
 
-const colors = [null, '#FF0D72', '#0DC2FF', '#0DFF72', '#F538FF', '#FF8E0D', '#FFE138', '#3877FF'];
+const colors = [null, '#FF0D72', '#0DC2FF', '#0DFF72', '#F538FF', '#FF8E0D', '#FFE138', '#3877FF', '#FFFFFF']; // Added white (index 8) for universal block
 
 let nextPiece = createRandomPiece();
 
@@ -71,6 +83,8 @@ function collide(arena, player) {
 }
 
 function merge(arena, player) {
+    // Prevents the universal block from being permanently merged into the arena grid
+    if (isPowerUpActive) return;
     player.matrix.forEach((row, y) => {
         row.forEach((value, x) => {
             if (value !== 0) {
@@ -84,13 +98,9 @@ function rotate(matrix, dir) {
     const newMatrix = [];
     const rows = matrix.length;
     const cols = matrix[0].length;
-
-    // Create a new matrix with swapped dimensions
     for (let i = 0; i < cols; i++) {
         newMatrix.push(new Array(rows).fill(0));
     }
-
-    // Populate the new matrix with rotated values
     for (let y = 0; y < rows; y++) {
         for (let x = 0; x < cols; x++) {
             if (dir > 0) { // Clockwise
@@ -103,14 +113,25 @@ function rotate(matrix, dir) {
     return newMatrix;
 }
 
-
 // --- Player Actions ---
 
 function playerDrop() {
     player.pos.y++;
     if (collide(arena, player)) {
         player.pos.y--;
-        merge(arena, player);
+
+        if (isPowerUpActive) {
+            const landingRow = player.pos.y;
+            if (landingRow >= 0 && landingRow < arena.length) {
+                arena.splice(landingRow, 1); // Remove the row at the landing position
+                arena.unshift(new Array(arena[0] ? arena[0].length : 12).fill(0)); // Add a new empty row at the top
+                player.score += 50; // Award 50 points for a power-up clear
+            }
+            isPowerUpActive = false;
+        } else {
+            merge(arena, player);
+        }
+
         playerReset();
         arenaSweep();
         updateScore();
@@ -119,6 +140,7 @@ function playerDrop() {
 }
 
 function playerMove(dir) {
+    if (isPaused) return;
     player.pos.x += dir;
     if (collide(arena, player)) {
         player.pos.x -= dir;
@@ -134,28 +156,53 @@ function playerReset() {
         arena.forEach(row => row.fill(0));
         player.score = 0;
         updateScore();
+        powerUpCount = 0; // Reset power-ups on game over
+        updatePowerUpDisplay();
     }
 }
 
 function playerRotate(dir) {
+    if (isPaused || isPowerUpActive) return; // Disable rotation for power-up block
     const pos = player.pos.x;
     let offset = 1;
     const rotatedMatrix = rotate(player.matrix, dir);
-    
-    // Temporarily apply rotation
     const originalMatrix = player.matrix;
     player.matrix = rotatedMatrix;
-
     while (collide(arena, player)) {
         player.pos.x += offset;
         offset = -(offset + (offset > 0 ? 1 : -1));
         if (offset > player.matrix[0].length) {
-            // Revert rotation if it doesn't fit
             player.matrix = originalMatrix;
             player.pos.x = pos;
             return;
         }
     }
+}
+
+// --- NEW Power-Up Functions ---
+
+function updatePowerUpDisplay() {
+    powerUpCountElement.innerText = powerUpCount;
+    powerUpContext.fillStyle = '#000';
+    powerUpContext.fillRect(0, 0, 1, 1);
+    powerUpContext.fillStyle = colors[8]; // Universal block color
+    powerUpContext.fillRect(0, 0, 1, 1);
+}
+
+function addPowerUp() {
+    if (isPaused) return;
+    powerUpCount++;
+    updatePowerUpDisplay();
+}
+
+function usePowerUp() {
+    if (isPaused || powerUpCount <= 0 || isPowerUpActive) return;
+    powerUpCount--;
+    updatePowerUpDisplay();
+    isPowerUpActive = true;
+    player.matrix = UNIVERSAL_BLOCK;
+    player.pos.y = 0; // Reset position to top-center for the 1x1 block
+    player.pos.x = (arena[0].length / 2 | 0) - 1;
 }
 
 // --- Game Logic ---
@@ -247,21 +294,26 @@ document.addEventListener('keydown', event => {
     if (event.keyCode === 32) event.preventDefault();
     switch (event.keyCode) {
         case 32: togglePause(); break;
-        case 37: if (!isPaused) playerMove(-1); break;
-        case 39: if (!isPaused) playerMove(1); break;
+        case 37: playerMove(-1); break;
+        case 39: playerMove(1); break;
         case 40: if (!isPaused) playerDrop(); break;
-        case 81: case 87: if (!isPaused) playerRotate(event.keyCode === 87 ? 1 : -1); break;
+        case 81: case 87: playerRotate(event.keyCode === 87 ? 1 : -1); break;
     }
 });
 
 canvas.addEventListener('click', togglePause);
-btnLeft.addEventListener('click', () => { if (!isPaused) playerMove(-1); });
-btnRight.addEventListener('click', () => { if (!isPaused) playerMove(1); });
+btnLeft.addEventListener('click', () => playerMove(-1));
+btnRight.addEventListener('click', () => playerMove(1));
 btnDown.addEventListener('click', () => { if (!isPaused) playerDrop(); });
-btnRotate.addEventListener('click', () => { if (!isPaused) playerRotate(1); });
+btnRotate.addEventListener('click', () => playerRotate(1));
+
+// NEW Event Listeners
+btnAddPowerUp.addEventListener('click', addPowerUp);
+btnUsePowerUp.addEventListener('click', usePowerUp);
 
 // --- Game Start ---
 
 playerReset();
 updateScore();
+updatePowerUpDisplay(); // Initial draw for the power-up UI
 update();

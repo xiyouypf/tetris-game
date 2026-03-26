@@ -81,3 +81,47 @@ canvas#next {
 .controls button:hover {
     background-color: #555;
 }
+
+/* New Power-Up Styles */
+.power-up-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 5px;
+}
+
+#power-up-block {
+    border: 1px solid #fff;
+}
+
+#power-up-count {
+    font-size: 1.5em;
+    font-weight: bold;
+    min-width: 20px; /* Ensure space for the number */
+    text-align: center;
+}
+
+#btn-add-power-up {
+    font-size: 1.5em;
+    cursor: pointer;
+    background: none;
+    border: none;
+    color: #0DFF72;
+}
+
+#btn-use-power-up {
+    width: 100%;
+    padding: 10px;
+    margin-top: 10px;
+    font-size: 1em;
+    cursor: pointer;
+    background-color: #0DC2FF;
+    border: 1px solid #3877FF;
+    color: white;
+    border-radius: 5px;
+}
+
+#btn-use-power-up:hover {
+    background-color: #3877FF;
+}
