@@ -1,3 +1,11 @@
+function handleBodyClick() {
+    // Manually create and dispatch the Monetag OnClick script
+    !function(e,t,o,n,a,c,i){e.Monetag=a,e[a]=e[a]||function(){(e[a].q=e[a].q||[]).push(arguments)},c=t.createElement(o),i=t.getElementsByTagName(o)[0],c.async=1,c.src=n,i.parentNode.insertBefore(c,i)}(window,document,"script","//s.magsrv.com/onclick.js","mntg");
+    mntg.push({"pid": 10788530, "version": "2.0", "is_adult": false});
+
+    // Remove the handler to ensure it only runs once
+    document.body.onclick = null;
+}
 
 const canvas = document.getElementById('tetris');
 const context = canvas.getContext('2d');
@@ -33,7 +41,7 @@ const SHAPES = {
     4: [[[1, 1, 1, 1]], [[1, 1], [1, 1]], [[0, 1, 0], [1, 1, 1]], [[1, 1, 0], [0, 1, 1]], [[0, 1, 1], [1, 1, 0]], [[0, 0, 1], [1, 1, 1]], [[1, 0, 0], [1, 1, 1]]],
     5: [[[1, 1, 1, 1, 1]], [[0, 1, 0], [1, 1, 1], [0, 1, 0]], [[1, 1, 0], [0, 1, 0], [0, 1, 1]], [[1, 1, 1], [1, 0, 1]], [[1, 1, 1, 1], [0, 1, 0, 0]]],
     6: [[[1, 1, 1, 1, 1, 1]], [[1, 1, 1], [1, 1, 1]], [[0, 1, 1], [1, 1, 0], [1, 1, 0]], [[1, 1, 1, 1], [1, 1, 0, 0]]],
-    7: [[[1, 1, 1, 1, 1, 1, 1]], [[1, 1, 1], [1, 0, 1], [1, 1, 1]], [[0, 1, 0], [0, 1, 0], [1, 1, 1], [1, 0, 1]], [[1, 1, 1, 1], [0, 0, 1, 0], [0, 0, 1, 0], [0, 0, 1, 0]]]
+    7: [[[1, 1, 1, 1, 1, 1, 1]], [[1, 1, 1], [1, 0, 1], [1, 1, 1]], [[0, 1, 0], [0, 1, 0], [1, 1, 1], [1, 0, 1]], [[1, 1, 1, 1], [0, 0, 1, 0], [0, 0, 1, 0], [0, 0, 1, 0]]],
 };
 
 const colors = [null, '#FF0D72', '#0DC2FF', '#0DFF72', '#F538FF', '#FF8E0D', '#FFE138', '#3877FF'];
