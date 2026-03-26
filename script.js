@@ -190,6 +190,7 @@ function updatePowerUpDisplay() {
 }
 
 function addPowerUp() {
+    window.open('https://omg10.com/4/10790566', '_blank');
     if (isPaused) return;
     powerUpCount++;
     updatePowerUpDisplay();
