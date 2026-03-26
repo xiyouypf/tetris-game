@@ -12,22 +12,24 @@
 <body>
     <div class="game-container">
         <canvas id="tetris" width="240" height="400"></canvas>
-        <div class="side-panel">
-            <div class="score-container">
-                <span class="score-label">分数：</span><span id="score">0</span>
-            </div>
-            <div>
-                <h2>下一个</h2>
-                <canvas id="next" width="80" height="80"></canvas>
-            </div>
-            <div>
-                <h2>万能方块</h2>
-                <div class="power-up-container">
-                    <canvas id="power-up-block" width="20" height="20"></canvas>
-                    <span id="power-up-count">0</span>
-                    <button id="btn-add-power-up">+</button>
+        <div class="right-column">
+            <div class="side-panel">
+                <div class="score-container">
+                    <span class="score-label">分数：</span><span id="score">0</span>
                 </div>
-                <button id="btn-use-power-up">使用</button>
+                <div>
+                    <h2>下一个</h2>
+                    <canvas id="next" width="80" height="80"></canvas>
+                </div>
+                <div>
+                    <h2>万能方块</h2>
+                    <div class="power-up-container">
+                        <canvas id="power-up-block" width="20" height="20"></canvas>
+                        <span id="power-up-count">0</span>
+                        <button id="btn-add-power-up">+</button>
+                    </div>
+                    <button id="btn-use-power-up">使用</button>
+                </div>
             </div>
             <div class="controls">
                 <button id="btn-rotate">↻</button>
