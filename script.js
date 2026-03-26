@@ -123,9 +123,10 @@ function playerDrop() {
         if (isPowerUpActive) {
             const landingRow = player.pos.y;
             if (landingRow >= 0 && landingRow < arena.length) {
-                arena.splice(landingRow, 1); // Remove the row at the landing position
-                arena.unshift(new Array(arena[0] ? arena[0].length : 12).fill(0)); // Add a new empty row at the top
-                player.score += 50; // Award 50 points for a power-up clear
+                const clearedBlocks = arena[landingRow].filter(value => value !== 0).length;
+                player.score += clearedBlocks;
+                arena.splice(landingRow, 1);
+                arena.unshift(new Array(arena[0] ? arena[0].length : 12).fill(0));
             }
             isPowerUpActive = false;
         } else {
