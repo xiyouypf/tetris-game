@@ -284,7 +284,7 @@ function draw() {
         context.font = '2px Arial';
         context.fillStyle = 'white';
         context.textAlign = 'center';
-        context.fillText('PAUSED', 6, 10);
+        context.fillText('已暂停', 6, 10);
     }
 }
 

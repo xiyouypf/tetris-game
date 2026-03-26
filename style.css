@@ -82,6 +82,25 @@ canvas#next {
     background-color: #555;
 }
 
+/* New Score Layout Styles */
+.score-container {
+    display: flex;
+    align-items: center; /* Vertically align items */
+    justify-content: center; /* Horizontally center items */
+    font-size: 1.5em; /* Match the original score font size */
+    font-weight: bold;
+    width: 100%;
+}
+
+.score-label {
+    color: #fff; /* White color for the label text */
+    margin-right: 5px; /* Space between label and number */
+}
+
+#score {
+    color: #FF0D72; /* Keep the original score number color */
+}
+
 /* New Power-Up Styles */
 .power-up-container {
     display: flex;
