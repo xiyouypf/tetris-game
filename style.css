@@ -228,3 +228,8 @@ canvas#next {
     cursor: pointer;
 }
 
+
+.difficulty-selector {
+    margin-bottom: 20px;
+}
+

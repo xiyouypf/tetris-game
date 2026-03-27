@@ -19,6 +19,8 @@ const gameOverScreen = document.getElementById('game-over-screen');
 const btnStartGame = document.getElementById('btn-start-game');
 const btnPlayAgain = document.getElementById('btn-play-again');
 const finalScoreElement = document.getElementById('final-score');
+const difficultyStart = document.getElementById('difficulty-start');
+const difficultyOver = document.getElementById('difficulty-over');
 
 context.scale(20, 20);
 nextContext.scale(20, 20);
@@ -26,6 +28,7 @@ powerUpContext.scale(20, 20);
 
 // --- State ---
 let gameState = 'startScreen'; // 'startScreen', 'playing', 'paused', 'gameOver'
+let difficulty = 1; // Default difficulty
 let dropCounter = 0;
 let dropInterval = 1000;
 let lastTime = 0;
@@ -42,19 +45,32 @@ const player = {
 
 const UNIVERSAL_BLOCK = [[8]];
 
-// --- Shapes (3 to 6 blocks) ---
+// --- Shapes (3 to 7 blocks) ---
 const SHAPES = {
     3: [[[1, 1, 1]], [[1, 1], [0, 1]], [[1, 0], [1, 1]]],
     4: [[[1, 1, 1, 1]], [[1, 1], [1, 1]], [[0, 1, 0], [1, 1, 1]], [[1, 1, 0], [0, 1, 1]], [[0, 1, 1], [1, 1, 0]], [[0, 0, 1], [1, 1, 1]], [[1, 0, 0], [1, 1, 1]]],
     5: [[[1, 1, 1, 1, 1]], [[0, 1, 0], [1, 1, 1], [0, 1, 0]], [[1, 1, 0], [0, 1, 0], [0, 1, 1]], [[1, 1, 1], [1, 0, 1]], [[1, 1, 1, 1], [0, 1, 0, 0]]],
     6: [[[1, 1, 1, 1, 1, 1]], [[1, 1, 1], [1, 1, 1]], [[0, 1, 1], [1, 1, 0], [1, 1, 0]], [[1, 1, 1, 1], [1, 1, 0, 0]]],
+    7: [[[1, 1, 1, 1, 1, 1, 1]], [[1, 1, 1], [1, 0, 1], [1, 1, 1]], [[0, 1, 0], [0, 1, 0], [1, 1, 1], [1, 0, 1]], [[1, 1, 1, 1], [0, 0, 1, 0], [0, 0, 1, 0], [0, 0, 1, 0]]],
 };
 
 const colors = [null, '#FF0D72', '#0DC2FF', '#0DFF72', '#F538FF', '#FF8E0D', '#FFE138', '#3877FF', '#FFFFFF'];
 let nextPiece = null;
 
 function createRandomPiece() {
-    const size = Math.floor(Math.random() * 4) + 3; // From 3 to 6
+    let min, max;
+    switch (parseInt(difficulty)) {
+        case 2:
+            min = 4; max = 5; // 4-5
+            break;
+        case 3:
+            min = 3; max = 7; // 3-7
+            break;
+        default: // case 1
+            min = 3; max = 6; // 3-6
+            break;
+    }
+    const size = Math.floor(Math.random() * (max - min + 1)) + min;
     const shapesOfSize = SHAPES[size];
     const shape = shapesOfSize[Math.floor(Math.random() * shapesOfSize.length)];
     const colorIndex = size - 2;
@@ -290,6 +306,7 @@ function draw() {
 }
 
 function startGame() {
+    difficulty = (gameState === 'startScreen') ? difficultyStart.value : difficultyOver.value;
     gameState = 'playing';
     arena.forEach(row => row.fill(0));
     player.score = 0;
