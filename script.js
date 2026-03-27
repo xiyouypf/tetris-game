@@ -7,7 +7,6 @@ const scoreElement = document.getElementById('score');
 const powerUpCanvas = document.getElementById('power-up-block');
 const powerUpContext = powerUpCanvas.getContext('2d');
 const powerUpCountElement = document.getElementById('power-up-count');
-const btnAddPowerUp = document.getElementById('btn-add-power-up');
 const btnUsePowerUp = document.getElementById('btn-use-power-up');
 const btnLeft = document.getElementById('btn-left');
 const btnRight = document.getElementById('btn-right');
@@ -32,6 +31,7 @@ let dropInterval = 1000;
 let lastTime = 0;
 let powerUpCount = 0;
 let isPowerUpActive = false;
+let lastScorePowerUp = 0; // Track score for power-up reward
 
 const arena = createMatrix(12, 20);
 const player = {
@@ -111,6 +111,14 @@ function rotate(matrix, dir) {
     return newMatrix;
 }
 
+function checkScoreForPowerUp() {
+    if (player.score - lastScorePowerUp >= 50) {
+        powerUpCount += Math.floor((player.score - lastScorePowerUp) / 50);
+        lastScorePowerUp = player.score - (player.score % 50);
+        updatePowerUpDisplay();
+    }
+}
+
 function playerDrop() {
     if (gameState !== 'playing') return;
     player.pos.y++;
@@ -121,6 +129,7 @@ function playerDrop() {
             if (landingRow >= 0 && landingRow < arena.length) {
                 const clearedBlocks = arena[landingRow].filter(value => value !== 0).length;
                 player.score += clearedBlocks;
+                checkScoreForPowerUp();
                 arena.splice(landingRow, 1);
                 arena.unshift(new Array(arena[0] ? arena[0].length : 12).fill(0));
             }
@@ -181,13 +190,6 @@ function updatePowerUpDisplay() {
     powerUpContext.fillRect(0, 0, 1, 1);
 }
 
-function addPowerUp() {
-    window.open('https://omg10.com/4/10790566', '_blank');
-    if (gameState !== 'playing') return;
-    powerUpCount++;
-    updatePowerUpDisplay();
-}
-
 function usePowerUp() {
     if (gameState !== 'playing' || powerUpCount <= 0 || isPowerUpActive) return;
     powerUpCount--;
@@ -210,6 +212,7 @@ function arenaSweep() {
         player.score += rowCount * 10;
         rowCount *= 2;
     }
+    checkScoreForPowerUp();
 }
 
 function togglePause() {
@@ -291,6 +294,7 @@ function startGame() {
     arena.forEach(row => row.fill(0));
     player.score = 0;
     powerUpCount = 3;
+    lastScorePowerUp = 0;
     updateScore();
     updatePowerUpDisplay();
     nextPiece = createRandomPiece();
@@ -322,7 +326,6 @@ btnLeft.addEventListener('click', () => playerMove(-1));
 btnRight.addEventListener('click', () => playerMove(1));
 btnDown.addEventListener('click', () => { if (gameState === 'playing') playerDrop(); });
 btnRotate.addEventListener('click', () => playerRotate(1));
-btnAddPowerUp.addEventListener('click', addPowerUp);
 btnUsePowerUp.addEventListener('click', usePowerUp);
 
 // --- Game Start ---
@@ -330,4 +333,3 @@ btnStartGame.addEventListener('click', startGame);
 btnPlayAgain.addEventListener('click', startGame);
 
 draw(); // Draw the initial board and pieces, but don't start the game loop.
-
