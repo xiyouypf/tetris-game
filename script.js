@@ -226,10 +226,14 @@ function update(time = 0) {
         const deltaTime = time - lastTime;
         lastTime = time;
         dropCounter += deltaTime;
-        if (dropCounter > dropInterval) playerDrop();
+        if (dropCounter > dropInterval) {
+            playerDrop();
+        }
     }
     draw();
-    if (gameState !== 'gameOver') requestAnimationFrame(update);
+    if (gameState === 'playing' || gameState === 'paused') {
+        requestAnimationFrame(update);
+    }
 }
 
 function updateScore() {
@@ -303,7 +307,7 @@ function startGame() {
 
 document.addEventListener('keydown', event => {
     if (event.keyCode === 32) event.preventDefault();
-    if (gameState !== 'playing') return;
+    if (gameState === 'startScreen' || gameState === 'gameOver') return;
     switch (event.keyCode) {
         case 32: togglePause(); break;
         case 37: playerMove(-1); break;
@@ -325,5 +329,5 @@ btnUsePowerUp.addEventListener('click', usePowerUp);
 btnStartGame.addEventListener('click', startGame);
 btnPlayAgain.addEventListener('click', startGame);
 
-update();
+draw(); // Draw the initial board and pieces, but don't start the game loop.
 
