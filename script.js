@@ -52,7 +52,7 @@ const SHAPES = {
 };
 
 const colors = [null, '#FF0D72', '#0DC2FF', '#0DFF72', '#F538FF', '#FF8E0D', '#FFE138', '#3877FF', '#FFFFFF'];
-let nextPiece = createRandomPiece();
+let nextPiece = null;
 
 // --- Core Functions ---
 
@@ -157,7 +157,6 @@ function playerReset() {
         gameState = 'gameOver';
         finalScoreElement.innerText = player.score;
         gameOverScreen.style.display = 'flex';
-        gameContainer.style.display = 'none';
     }
 }
 
@@ -238,26 +237,28 @@ function startGame() {
     powerUpCount = 0;
     updateScore();
     updatePowerUpDisplay();
+    nextPiece = createRandomPiece();
     playerReset();
     startScreen.style.display = 'none';
     gameOverScreen.style.display = 'none';
-    gameContainer.style.display = 'flex';
+    lastTime = 0;
+    dropCounter = 0;
     update();
 }
 
 function update(time = 0) {
-    if (gameState !== 'playing') {
-        draw();
-        return;
-    }
-    const deltaTime = time - lastTime;
-    lastTime = time;
-    dropCounter += deltaTime;
-    if (dropCounter > dropInterval) {
-        playerDrop();
+    if (gameState === 'playing') {
+        const deltaTime = time - lastTime;
+        lastTime = time;
+        dropCounter += deltaTime;
+        if (dropCounter > dropInterval) {
+            playerDrop();
+        }
     }
     draw();
-    requestAnimationFrame(update);
+    if (gameState !== 'gameOver') {
+        requestAnimationFrame(update);
+    }
 }
 
 function updateScore() {
@@ -280,17 +281,19 @@ function drawMatrix(matrix, offset) {
 function drawNextPiece() {
     nextContext.fillStyle = '#000';
     nextContext.fillRect(0, 0, nextCanvas.width, nextCanvas.height);
-    const piece = nextPiece;
-    const x = (nextCanvas.width / 20 - piece[0].length) / 2;
-    const y = (nextCanvas.height / 20 - piece.length) / 2;
-    piece.forEach((row, rowIdx) => {
-        row.forEach((value, colIdx) => {
-            if (value !== 0) {
-                nextContext.fillStyle = colors[value];
-                nextContext.fillRect(x + colIdx, y + rowIdx, 1, 1);
-            }
+    if (nextPiece) {
+        const piece = nextPiece;
+        const x = (nextCanvas.width / 20 - piece[0].length) / 2;
+        const y = (nextCanvas.height / 20 - piece.length) / 2;
+        piece.forEach((row, rowIdx) => {
+            row.forEach((value, colIdx) => {
+                if (value !== 0) {
+                    nextContext.fillStyle = colors[value];
+                    nextContext.fillRect(x + colIdx, y + rowIdx, 1, 1);
+                }
+            });
         });
-    });
+    }
 }
 
 function draw() {
@@ -303,10 +306,8 @@ function draw() {
     drawNextPiece();
 
     if (gameState === 'paused') {
-        context.fillStyle = 'rgba(0, 0, 0, 0.5)';
-        context.fillRect(0, 0, canvas.width, canvas.height);
+        context.fillStyle = 'rgba(255, 255, 255, 0.5)';
         context.font = '2px Arial';
-        context.fillStyle = 'white';
         context.textAlign = 'center';
         context.fillText('已暂停', 6, 10);
     }
@@ -315,10 +316,13 @@ function draw() {
 // --- Event Listeners ---
 
 document.addEventListener('keydown', event => {
-    if (event.keyCode === 32) event.preventDefault();
+    if (event.keyCode === 32) {
+        event.preventDefault();
+        togglePause();
+        return;
+    }
     if (gameState !== 'playing') return;
     switch (event.keyCode) {
-        case 32: togglePause(); break;
         case 37: playerMove(-1); break;
         case 39: playerMove(1); break;
         case 40: playerDrop(); break;
@@ -329,7 +333,7 @@ document.addEventListener('keydown', event => {
 canvas.addEventListener('click', togglePause);
 btnLeft.addEventListener('click', () => playerMove(-1));
 btnRight.addEventListener('click', () => playerMove(1));
-btnDown.addEventListener('click', ()_=> { if(gameState === 'playing') playerDrop(); });
+btnDown.addEventListener('click', () => { if(gameState === 'playing') playerDrop(); });
 btnRotate.addEventListener('click', () => playerRotate(1));
 btnAddPowerUp.addEventListener('click', addPowerUp);
 btnUsePowerUp.addEventListener('click', usePowerUp);
@@ -338,6 +342,6 @@ btnUsePowerUp.addEventListener('click', usePowerUp);
 btnStartGame.addEventListener('click', startGame);
 btnPlayAgain.addEventListener('click', startGame);
 
-// --- Initial Draw ---
-draw();
+// --- Initial Load ---
+update(); // Start the game loop to draw the initial state
 
