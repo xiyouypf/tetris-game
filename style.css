@@ -209,11 +209,13 @@ canvas#next {
 }
 
 .overlay-content {
-    background-color: white;
+    background-color: #333;
+    color: white;
     padding: 40px;
     border-radius: 10px;
     text-align: center;
-    box-shadow: 0 0 15px rgba(0,0,0,0.3);
+    box-shadow: 0 0 15px rgba(0,0,0,0.5);
+    border: 2px solid #555;
 }
 
 .overlay-content h1 {
