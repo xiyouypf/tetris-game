@@ -1,196 +1,93 @@
 
-html, body {
-    margin: 0;
-    padding: 0;
+body, html {
     height: 100%;
-    width: 100%;
-    overflow: hidden; /* Prevent scrollbars from appearing */
-}
-
-body {
-    background: #202028;
-    color: #fff;
-    font-family: sans-serif;
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background-color: #f0f0f0;
     display: flex;
     justify-content: center;
     align-items: center;
-    box-sizing: border-box;
-    padding: 10px;
 }
 
 .game-container {
     display: flex;
-    justify-content: center; /* Center items horizontally */
-    align-items: flex-start;
-    flex-wrap: wrap; /* Allow items to wrap to the next line on small screens */
-    gap: 20px;
-    padding: 20px;
-    border-radius: 10px;
-    background: #000;
-    max-width: 100%; /* Ensure the container itself doesn't overflow */
+    border: 2px solid #333;
+    background-color: #fff;
+    box-shadow: 0 0 10px rgba(0,0,0,0.2);
 }
 
-canvas#tetris {
-    border: solid 1px #fff;
-    max-width: 100%; /* Make canvas responsive */
-    height: auto;    /* Maintain aspect ratio */
+canvas {
+    border: 1px solid #ccc;
+    background-color: #000;
 }
 
-.side-panel {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 20px;
-    min-width: 120px; /* Give side panel a minimum width */
-    flex-grow: 1;     /* Allow it to grow */
-}
-
-.side-panel h2 {
-    margin: 0;
-    font-size: 0.8em;
-}
-
-#score {
-    color: #FF0D72;
-    font-weight: bold;
-    font-size: 1.5em;
-}
-
-canvas#next {
-    border: solid 1px #fff;
-    background: #000;
-}
-
-.controls {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 10px;
-    width: 100%; /* Make controls take full width of side-panel */
-}
-
-.controls button {
-    font-size: 1.5em;
-    padding: 10px;
-    cursor: pointer;
-    background-color: #333;
-    border: 1px solid #555;
-    color: white;
-    border-radius: 5px;
-}
-
-.controls button:hover {
-    background-color: #555;
-}
-
-/* New Right Column for Desktop */
 .right-column {
+    padding: 20px;
     display: flex;
     flex-direction: column;
-    gap: 20px;
-    min-width: 120px;
+    justify-content: space-between;
 }
 
-/* --- Responsive Layout for Mobile --- */
-@media (max-width: 600px) {
-    body {
-        padding: 5px; /* Reduce padding on mobile */
-    }
-
-    .game-container {
-        flex-direction: column; /* Stack main game and right column vertically */
-        align-items: center;
-        padding: 10px;
-        gap: 10px;
-    }
-
-    .right-column {
-        order: 3; /* Move the entire right column to the bottom */
-        width: 100%;
-    }
-
-    .side-panel {
-        flex-direction: row; /* Display side-panel items horizontally */
-        justify-content: space-around; /* Space them out evenly */
-        width: 100%;
-        align-items: flex-start;
-    }
-
-    .controls {
-        order: 2; /* Crucially, move controls to be right below the game canvas */
-        display: grid;
-        grid-template-columns: repeat(4, 1fr); /* All four buttons in one row */
-        width: 100%;
-        max-width: 300px; /* Give a max width to the controls */
-        margin-top: 10px;
-    }
-
-    .side-panel > div {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        text-align: center;
-    }
+.side-panel > div {
+    margin-bottom: 20px;
 }
 
-/* New Score Layout Styles */
 .score-container {
-    display: flex;
-    align-items: center; /* Vertically align items */
-    justify-content: center; /* Horizontally center items */
-    font-size: 1.5em; /* Match the original score font size */
-    font-weight: bold;
-    width: 100%;
-}
-
-.score-label {
-    color: #fff; /* White color for the label text */
-    margin-right: 5px; /* Space between label and number */
-}
-
-#score {
-    color: #FF0D72; /* Keep the original score number color */
-}
-
-/* New Power-Up Styles */
-.power-up-container {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
-    margin-top: 5px;
-}
-
-#power-up-block {
-    border: 1px solid #fff;
-}
-
-#power-up-count {
     font-size: 1.5em;
-    font-weight: bold;
-    min-width: 20px; /* Ensure space for the number */
-    text-align: center;
 }
 
-#btn-add-power-up {
-    font-size: 1.5em;
-    cursor: pointer;
-    background: none;
-    border: none;
-    color: #0DFF72;
-}
-
-#btn-use-power-up {
+.controls button, #btn-use-power-up {
+    display: block;
     width: 100%;
     padding: 10px;
     margin-top: 10px;
-    font-size: 1em;
+    font-size: 1.2em;
     cursor: pointer;
-    background-color: #0DC2FF;
-    border: 1px solid #3877FF;
-    color: white;
-    border-radius: 5px;
 }
 
-#btn-use-power-up:hover {
-    background-color: #3877FF;
+.power-up-container {
+    display: flex;
+    align-items: center;
+}
+
+.power-up-container canvas {
+    margin-right: 10px;
+}
+
+#btn-add-power-up {
+    padding: 2px 6px;
+    font-size: 0.8em;
+    margin-left: 10px;
+}
+
+/* Overlay styles */
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 100;
+}
+
+.overlay-content {
+    background-color: white;
+    padding: 40px;
+    border-radius: 10px;
+    text-align: center;
+    box-shadow: 0 0 15px rgba(0,0,0,0.3);
+}
+
+.overlay-content h1 {
+    margin-bottom: 20px;
+}
+
+.overlay-content button {
+    padding: 10px 20px;
+    font-size: 1em;
+    cursor: pointer;
 }
