@@ -290,7 +290,7 @@ function startGame() {
     gameState = 'playing';
     arena.forEach(row => row.fill(0));
     player.score = 0;
-    powerUpCount = 0;
+    powerUpCount = 3;
     updateScore();
     updatePowerUpDisplay();
     nextPiece = createRandomPiece();
