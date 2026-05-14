@@ -173,11 +173,12 @@ function playerReset() {
     nextPiece = createRandomPiece();
     player.pos.y = 0;
     player.pos.x = (arena[0].length / 2 | 0) - (player.matrix[0].length / 2 | 0);
-    if (collide(arena, player)) {
-        gameState = 'gameOver';
-        finalScoreElement.innerText = player.score;
-        gameOverScreen.style.display = 'flex';
-    }
+        if (collide(arena, player)) {
+            gameState = 'gameOver';
+            showAd();
+            finalScoreElement.innerText = player.score;
+            gameOverScreen.style.display = 'flex';
+        }
 }
 
 function playerRotate(dir) {
@@ -350,3 +351,39 @@ btnStartGame.addEventListener('click', startGame);
 btnPlayAgain.addEventListener('click', startGame);
 
 draw(); // Draw the initial board and pieces, but don't start the game loop.
+
+// --- Applixir Ad Integration ---
+
+function grantReward() {
+    // This function is called when the ad is successfully watched.
+    // You can add logic here to give the player a bonus, like extra points or a power-up.
+    console.log("Ad watched, reward granted!");
+    // Example: Add 50 points as a reward
+    // player.score += 50;
+    // updateScore();
+}
+
+function showAd() {
+    const adOptions = {
+        apiKey: "b71daf2f-a8a5-4e76-9baa-e0d2f0015c1f",
+        adStatusCallbackFn: (status) => {
+            console.log("Applixir ad status:", status);
+            // The status can be a simple string or an object.
+            // 'ad-watched' is the primary success event.
+            // The object format with 'complete' is also used.
+            const isComplete = (typeof status === 'string' && status === 'ad-watched') ||
+                               (typeof status === 'object' && status !== null && status.type === 'complete');
+
+            if (isComplete) {
+                grantReward();
+            }
+        },
+        injectionElementId: "applixir_ad_container",
+    };
+
+    if (typeof initializeAndOpenPlayer === 'function') {
+        initializeAndOpenPlayer(adOptions);
+    } else {
+        console.error("AppLixir SDK not found. Ad will not be shown.");
+    }
+}
